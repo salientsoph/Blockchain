@@ -16,7 +16,7 @@ from flask import Flask, jsonify
 
 
 # Part 1 - Building a Blockchain
-Class Blockchain:
+class Blockchain:
     def __init__(self): 
         self.chain = []
         self.create_block(proof = 1, previous_hash = '0')
@@ -73,7 +73,7 @@ app = Flask(__name__)
 blockchain = Blockchain()
 
 # Mining a Blockchain
-@app.route("http://127.0.0.1:5000/mine_block", method = ['GET'])
+@app.route("mine_block", method = ['GET'])
 def mine_block():
     previous_block = blockchain.get_previous_block()
     previous_proof = previous_block['proof']
@@ -87,3 +87,12 @@ def mine_block():
                ,'previous_hash' : block['previous_hash']}
     return jsonify(response), 200
 
+# Getting the full Blockchain
+@app.route("get_chain", method = ['GET'])
+def get_chain():
+    response = {'chain': blockchain.chain
+               ,'length': len(blockchain.chain)}
+    return jsonify(response), 200
+
+# Running the app
+app.run(host = '0.0.0.0', port = 5000)
